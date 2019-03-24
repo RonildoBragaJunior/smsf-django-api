@@ -63,7 +63,7 @@ class SMSFMember(Member):
     annual_income = models.DecimalField(max_digits=64, decimal_places=2, blank=True, null=True)
     mothers_maiden_name = models.CharField(max_length=20, blank=True, null=True)
     tax_file_number = models.CharField(max_length=20, blank=True, null=True)
-    occupation = models.CharField(max_length=20, blank=True, null=True)
+    occupation = models.CharField(max_length=100, blank=True, null=True)
     employer = models.CharField(max_length=20, blank=True, null=True)
 
     smsfund = models.ForeignKey(to='SMSFund', related_name='smsf_members', null=True, on_delete=models.CASCADE)
