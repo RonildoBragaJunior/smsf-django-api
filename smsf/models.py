@@ -5,6 +5,7 @@ from django.db import transaction
 from rest_framework.authtoken.models import Token
 
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'),)
+YES_NO_CHOICES = (('Y', 'Yes'), ('N', 'No'),)
 PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$',message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
 
@@ -70,6 +71,7 @@ class SMSFMember(Member):
     documents = models.ManyToManyField(to='Documents')
     place_of_residence = models.OneToOneField(to='Address', related_name='smsf_member_place_of_residence', blank=True, null=True, on_delete=models.CASCADE)
     place_of_birth = models.OneToOneField(to='Address', related_name='smsf_member_place_of_birth', blank=True, null=True,on_delete=models.CASCADE)
+    accept_terms = models.CharField(max_length=1, choices=YES_NO_CHOICES, blank=True, null=True)
 
     @transaction.atomic
     def create_smsf_member(self, **user):

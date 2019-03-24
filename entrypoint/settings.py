@@ -25,8 +25,6 @@ SECRET_KEY = 'q8l*iy#-=lh8yhacpqbl9jqvsuvbm63ihaxw(=23xwybx+#)z0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -40,8 +38,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',
     'smsf',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -135,9 +133,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = False
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
-    '127.0.0.1:3000'
-)
+ALLOWED_HOSTS = ['*']
