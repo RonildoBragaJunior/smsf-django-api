@@ -81,8 +81,9 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
         if validated_data.get('place_of_birth') is not None:
             place_of_birth = validated_data.pop('place_of_birth')
 
-        smsf_member = SMSFMember(**validated_data).create_smsf_member(**user)
-        SFund.objects.create(smsf_member=smsf_member, balance=fund['balance'])
+        smsf_member = SMSFMember(**validated_data).create_user(**user)
+        smsf_member.save()
+        smsf_member.sfunds.add( SFund.objects.create(smsf_member=smsf_member, balance=fund['balance']) )
         smsf_member.save()
 
         return smsf_member
@@ -101,11 +102,14 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
                 investment_strategies = smsfund.pop('investment_strategies')
 
             smsfund, created = SMSFund.objects.get_or_create(**smsfund)
-            instance.smsfund = smsfund
 
             if investment_strategies is not None:
                 for investment_strategy in investment_strategies:
-                    InvestmentStrategy.objects.get_or_create(smsfund_id=smsfund.id, name=investment_strategy['name'])
+                    investment_strategy, created = InvestmentStrategy.objects.get_or_create(name=investment_strategy['name'])
+                    smsfund.investment_strategies.add(investment_strategy)
+
+            smsfund.save()
+            instance.smsfund = smsfund
 
         if validated_data.get('place_of_residence') is not None:
             place_of_residence = validated_data.pop('place_of_residence')
@@ -117,9 +121,20 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
             place_of_birth, created = Address.objects.get_or_create(smsf_member_place_of_birth=instance, **place_of_birth)
             instance.place_of_birth = place_of_birth
 
-        #TODO: Find a better way to save the relationships between tables and fields
+        if validated_data.get('annual_income') is not None:
+            instance.annual_income = validated_data.pop('annual_income')
+        if validated_data.get('mothers_maiden_name') is not None:
+            instance.mothers_maiden_name = validated_data.pop('mothers_maiden_name')
+        if validated_data.get('tax_file_number') is not None:
+            instance.tax_file_number = validated_data.pop('tax_file_number')
+        if validated_data.get('occupation') is not None:
+            instance.occupation = validated_data.pop('occupation')
+        if validated_data.get('employer') is not None:
+            instance.employer = validated_data.pop('employer')
+        if validated_data.get('accept_terms') is not None:
+            instance.accept_terms = validated_data.pop('accept_terms')
+
         instance.save()
-        instance.save(update_fields=validated_data)
         return instance
 
 
