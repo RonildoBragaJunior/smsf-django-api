@@ -11,6 +11,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class DocumentsSerializer(serializers.ModelSerializer):
+    uuid = serializers.CharField(allow_blank=True, required=False)
+    name = serializers.CharField(allow_blank=True, required=False)
+    url = serializers.URLField(required=False)
+
     class Meta:
         model = Documents
         fields = ('__all__')
@@ -29,13 +33,18 @@ class InvestmentStrategySerializer(serializers.ModelSerializer):
 
 
 class SFundSerializer(serializers.ModelSerializer):
+    uuid = serializers.CharField(allow_blank=True, required=False)
+    balance = serializers.DecimalField(max_digits=64, decimal_places=2, required=False)
+    name = serializers.CharField(allow_blank=True, required=False)
+
     class Meta:
         model = SFund
-        fields = ('__all__')
+        fields = ('uuid', 'name', 'balance')
 
 
 class SMSFundSerializer(serializers.ModelSerializer):
     investment_strategies = InvestmentStrategySerializer(many=True)
+    documents = DocumentsSerializer(many=True, required=False)
 
     class Meta:
         model = SMSFund
@@ -58,7 +67,6 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
     password = serializers.CharField(source='user.password', allow_blank=True, required=False)
     first_name = serializers.CharField(source='user.first_name', allow_blank=True, required=False)
     last_name = serializers.CharField(source='user.last_name', allow_blank=True, required=False)
-    fund_balance = serializers.CharField(source='sfund.balance', allow_blank=True, required=False)
 
     sfunds = SFundSerializer(many=True, required=False)
     smsfund = SMSFundSerializer(required=False)
@@ -73,18 +81,24 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         user = validated_data.pop('user')
-        fund = validated_data.pop('sfund')
+
+        if validated_data.get('sfunds') is not None:
+            sfunds = validated_data.pop('sfunds')
+
         if validated_data.get('smsfund') is not None:
             smsfund = validated_data.pop('smsfund')
+
         if validated_data.get('place_of_residence') is not None:
             place_of_residence = validated_data.pop('place_of_residence')
+
         if validated_data.get('place_of_birth') is not None:
             place_of_birth = validated_data.pop('place_of_birth')
 
         smsf_member = SMSFMember(**validated_data).create_user(**user)
         smsf_member.save()
-        smsf_member.sfunds.add( SFund.objects.create(smsf_member=smsf_member, balance=fund['balance']) )
-        smsf_member.save()
+
+        for sfund in sfunds:
+            SFund.objects.create(smsf_member=smsf_member, **sfund)
 
         return smsf_member
 
@@ -93,8 +107,10 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
         if validated_data.get('user') is not None:
             user = validated_data.pop('user')
 
-        if validated_data.get('sfund') is not None:
-            sfund = validated_data.pop('sfund')
+        if validated_data.get('sfunds') is not None:
+            sfunds = validated_data.pop('sfunds')
+            for sfund in sfunds:
+                SFund.objects.get_or_create(smsf_member=instance, **sfund)
 
         if validated_data.get('smsfund') is not None:
             smsfund = validated_data.pop('smsfund')
@@ -123,19 +139,30 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
 
         if validated_data.get('annual_income') is not None:
             instance.annual_income = validated_data.pop('annual_income')
+
         if validated_data.get('mothers_maiden_name') is not None:
             instance.mothers_maiden_name = validated_data.pop('mothers_maiden_name')
+
         if validated_data.get('tax_file_number') is not None:
             instance.tax_file_number = validated_data.pop('tax_file_number')
+
         if validated_data.get('occupation') is not None:
             instance.occupation = validated_data.pop('occupation')
+
         if validated_data.get('employer') is not None:
             instance.employer = validated_data.pop('employer')
+
         if validated_data.get('accept_terms') is not None:
             instance.accept_terms = validated_data.pop('accept_terms')
 
+        if validated_data.get('gender') is not None:
+            instance.gender = validated_data.pop('gender')
+
+        if validated_data.get('birth_date') is not None:
+            instance.birth_date = validated_data.pop('birth_date')
+
+        if validated_data.get('mobile_number') is not None:
+            instance.mobile_number = validated_data.pop('mobile_number')
+
         instance.save()
         return instance
-
-
-
