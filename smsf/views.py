@@ -27,7 +27,7 @@ class SignUpViewSet(views.APIView):
 
 
 class StaffMemberViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
     queryset = StaffMember.objects.all()
     serializer_class = StaffMemberSerializer
 
@@ -39,6 +39,6 @@ class SMSFMemberViewSet(viewsets.ModelViewSet):
 
 
 class DocumentsViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
     queryset = Documents.objects.all()
     serializer_class = DocumentsSerializer
