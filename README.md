@@ -1,24 +1,3 @@
-# API Features
-
-This API provides these end points:
-
-- Given a company, the API needs to return all their employees. Provide the appropriate solution if the company does not have any employees.
-- Given 2 people, provide their information (Name, Age, Address, phone) and the list of their friends in common which have brown eyes and are still alive.
-- Given 1 people, provide a list of fruits and vegetables they like. This endpoint must respect this interface for the output: {"username": "Ahi", "age": "30", "fruits": ["banana", "apple"], "vegetables": ["beetroot", "lettuce"]}
-
-### AWS API end points
-
-Please use the user:**ronildo** and password:**ronildo**
-    
-- http://hivery-api-env.8yd8sarhgk.us-west-2.elasticbeanstalk.com/admin/
-
-- http://hivery-api-env.8yd8sarhgk.us-west-2.elasticbeanstalk.com/api/company_employees/1
-
-- http://hivery-api-env.8yd8sarhgk.us-west-2.elasticbeanstalk.com/api/our_friends/1/2
-
-- http://hivery-api-env.8yd8sarhgk.us-west-2.elasticbeanstalk.com/api/favourite_foods/1
-
-___
 
 # Requirements
 - Python 3.6 or above
@@ -47,29 +26,29 @@ ___
 
     ```
     pyenv install 3.7.2
-    pyenv virtualenv 3.7.2 hivery
+    pyenv virtualenv 3.7.2 backend
     ```
 
 ## Software instalation proccess
     
 - ### How to get the source code
 
-    `git clone https://github.com/RonildoBragaJunior/hivery-api.git`
+    `https://github.com/RonildoBragaJunior/smsf-django-api`
     
 - ### How to run it:
 
     - Using the exisitng database. *user:ronildo / password:ronildo*
     ```
-    pyenv activate hivery
-    cd hivery-api
+    pyenv activate backend
+    cd backend-api
     pip install -r requirements.txt
     python manage.py runserver
     ```
     
     - Only if you want to start a fresh database
     ```
-    pyenv activate hivery
-    cd hivery-api
+    pyenv activate backend
+    cd backend-api
     pip install -r requirements.txt
     
     python manage.py flush
@@ -97,9 +76,9 @@ ___
     *- If you dont have the credentials, please create yours using this [link](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)*
     
     ```
-    eb init -p python-3.6 hivery-api
+    eb init -p python-3.6 backend-api
     eb init
-    eb create hivery-api-prod
+    eb create backend-api-prod
     ```
     
     - How to deploy into the AWS environment
@@ -110,13 +89,3 @@ ___
     ```
     
 ___
-
-# Database diagram
-    
-![alt text](https://raw.githubusercontent.com/RonildoBragaJunior/hivery-api/master/resources/database_diagram.png)
-
-# Class diagram
-![alt text](https://raw.githubusercontent.com/RonildoBragaJunior/hivery-api/master/resources/class_diagram.png)
-
-    
-    
