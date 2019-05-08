@@ -86,11 +86,11 @@ class StaffMember(Member):
 
 
 class SMSFMember(Member):
-    smsfund = models.ForeignKey(to='SMSFund', related_name='smsf_members', null=True, on_delete=models.CASCADE)
-    contact_owner = models.ForeignKey(to='StaffMember', blank=True, null=True, on_delete=models.CASCADE)
-    documents = models.ManyToManyField(to='Documents', related_name='documents')
-    place_of_residence = models.OneToOneField(to='Address', related_name='smsf_member_place_of_residence', blank=True,null=True, on_delete=models.CASCADE)
-    place_of_birth = models.OneToOneField(to='Address', related_name='smsf_member_place_of_birth', blank=True,null=True, on_delete=models.CASCADE)
+    smsfund = models.ForeignKey(to='SMSFund', related_name='smsf_members', null=True, blank=True, on_delete=models.CASCADE)
+    contact_owner = models.ForeignKey(to='StaffMember', null=True, blank=True, on_delete=models.CASCADE)
+    documents = models.ManyToManyField(to='Documents', related_name='documents', null=True, blank=True)
+    place_of_residence = models.OneToOneField(to='Address', related_name='smsf_member_place_of_residence', null=True, blank=True, on_delete=models.CASCADE)
+    place_of_birth = models.OneToOneField(to='Address', related_name='smsf_member_place_of_birth', null=True, blank=True, on_delete=models.CASCADE)
 
     annual_income = models.DecimalField(max_digits=64, decimal_places=2, blank=True, null=True)
     mothers_maiden_name = models.CharField(max_length=20, blank=True, null=True)

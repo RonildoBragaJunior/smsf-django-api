@@ -19,3 +19,4 @@ admin.site.register(Address)
 admin.site.register(SFund)
 admin.site.register(StaffMember)
 admin.site.register(InvestmentStrategy)
+
