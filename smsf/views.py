@@ -1,3 +1,4 @@
+from rest_framework import status
 from django_filters import rest_framework as filters
 from rest_framework import filters
 from rest_framework import views, viewsets
@@ -16,13 +17,14 @@ class SignUpViewSet(views.APIView):
             try:
                 user = User.objects.get(username=request.data['username'])
                 if( user.check_password(request.data['password']) ):
-                    return Response(SMSFMemberSerializer(user.smsfmember).data)
-                return Response('message: This email {0} has been taken'.format(serializer.username))
+                    return Response(SMSFMemberSerializer(user.smsfmember).data,  status=status.HTTP_202_ACCEPTED)
+                else:
+                    return Response('This email {0} has been taken'.format(request.data['username']), status=status.HTTP_403_FORBIDDEN)
             except User.DoesNotExist:
                 serializer.save()
-                return Response(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response({serializer.error_messages})
+            return Response({serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def patch(self, request, uuid):
         smsf_member = SMSFMember.objects.get(uuid=uuid)

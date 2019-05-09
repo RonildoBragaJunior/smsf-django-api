@@ -97,8 +97,9 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
         smsf_member = SMSFMember(**validated_data).create_user(**user)
         smsf_member.save()
 
-        for sfund in sfunds:
-            SFund.objects.create(smsf_member=smsf_member, **sfund)
+        if validated_data.get('sfunds') is not None:
+            for sfund in sfunds:
+                SFund.objects.create(smsf_member=smsf_member, **sfund)
 
         return smsf_member
 
@@ -106,6 +107,12 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if validated_data.get('user') is not None:
             user = validated_data.pop('user')
+            instance.user.first_name = user.pop('first_name')
+            instance.user.last_name = user.pop('last_name')
+            instance.user.save()
+
+        if validated_data.get('middle_name') is not None:
+            instance.middle_name = validated_data.pop('middle_name')
 
         if validated_data.get('sfunds') is not None:
             sfunds = validated_data.pop('sfunds')
