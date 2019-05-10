@@ -14,15 +14,8 @@ class SignUpViewSet(views.APIView):
     def post(self, request):
         serializer = SMSFMemberSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                user = User.objects.get(username=request.data['username'])
-                if( user.check_password(request.data['password']) ):
-                    return Response(SMSFMemberSerializer(user.smsfmember).data,  status=status.HTTP_202_ACCEPTED)
-                else:
-                    return Response('This email {0} has been taken'.format(request.data['username']), status=status.HTTP_403_FORBIDDEN)
-            except User.DoesNotExist:
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
