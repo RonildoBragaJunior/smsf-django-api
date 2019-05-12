@@ -9,7 +9,7 @@ GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'),)
 YES_NO_CHOICES = (('Y', 'Yes'), ('N', 'No'),)
 ROLLOVER_CHOICES = (('F', 'Full'), ('P', 'Partial'),)
 STAFF_ROLE = (('S', 'Sale'), ('O', 'Operations'),('A','Accounting'))
-PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$',message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+# PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$',message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 
 
 class Documents(models.Model):
@@ -43,7 +43,7 @@ class SFund(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
     smsf_member = models.ForeignKey(to='SMSFMember', related_name='sfunds', on_delete=models.CASCADE)
     balance = models.DecimalField(max_digits=64, decimal_places=2, blank=True, null=True)
-    account_number = models.DecimalField(max_digits=64, decimal_places=2, blank=True, null=True)
+    account_number = models.CharField(max_length=20, blank=True, null=True)
     rollover = models.CharField(max_length=1, choices=ROLLOVER_CHOICES, blank=True, null=True)
 
     def __str__(self):
@@ -67,7 +67,7 @@ class Member(models.Model):
     middle_name = models.CharField(max_length=100, blank=True, null=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
-    mobile_number = models.CharField(validators=[PHONE_REGEX], max_length=17, blank=True, null=True)
+    mobile_number = models.CharField(max_length=17, blank=True, null=True)
 
     class Meta:
         abstract = True

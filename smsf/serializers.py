@@ -68,6 +68,8 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='user.first_name', allow_blank=True, required=False)
     last_name = serializers.CharField(source='user.last_name', allow_blank=True, required=False)
 
+    birth_date = serializers.DateField(input_formats=['%Y-%m-%d',], required=False)
+
     sfunds = SFundSerializer(many=True, required=False)
     smsfund = SMSFundSerializer(required=False)
     place_of_residence = AddressSerializer(required=False)
