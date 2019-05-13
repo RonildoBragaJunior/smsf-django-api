@@ -1,10 +1,7 @@
 Hello,
 
 Thank you for registering to Squirrel and congratulations on the choice to get control back over your super!
-Please click on the link below to activate your account and proceed further with your application.
-
-[[${activationLink}]]
-
+We will contact you as soon as your account is open.
 Shall you face any issue, do not hesitate to contact us
 136 887 (8:30 am - 5:30 pm weekdays)
 +61 2 8823 7999 (from outside Australia)
