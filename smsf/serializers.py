@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.db import transaction
 from smsf.models import Documents, SMSFund, SFund, InvestmentStrategy, StaffMember, Address, SMSFMember
-
+import datetime
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -164,6 +164,7 @@ class SMSFMemberSerializer(serializers.ModelSerializer):
 
         if validated_data.get('accept_terms') is not None:
             instance.accept_terms = validated_data.pop('accept_terms')
+            instance.accept_terms_timestamp = datetime.datetime.now()
 
         if validated_data.get('gender') is not None:
             instance.gender = validated_data.pop('gender')

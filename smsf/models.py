@@ -16,6 +16,8 @@ class Documents(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=20)
     url = models.URLField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -25,6 +27,8 @@ class Address(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     street_name = models.CharField(max_length=100, blank=True, null=True)
     postal_code = models.IntegerField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "%s" % (self.street_name)
@@ -33,6 +37,8 @@ class Address(models.Model):
 class InvestmentStrategy(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=20, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -45,6 +51,8 @@ class SFund(models.Model):
     balance = models.DecimalField(max_digits=64, decimal_places=2, blank=True, null=True)
     account_number = models.CharField(max_length=20, blank=True, null=True)
     rollover = models.CharField(max_length=1, choices=ROLLOVER_CHOICES, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -56,6 +64,8 @@ class SMSFund(models.Model):
     documents = models.ManyToManyField(to='Documents')
     balance = models.DecimalField(max_digits=64, decimal_places=2, blank=True, null=True)
     investment_strategies = models.ManyToManyField(to='InvestmentStrategy', related_name='smsfunds')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "%s" % (self.name)
@@ -68,6 +78,8 @@ class Member(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
     mobile_number = models.CharField(max_length=17, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
@@ -98,6 +110,7 @@ class SMSFMember(Member):
     occupation = models.CharField(max_length=100, blank=True, null=True)
     employer = models.CharField(max_length=20, blank=True, null=True)
     accept_terms = models.CharField(max_length=1, choices=YES_NO_CHOICES, blank=True, null=True)
+    accept_terms_timestamp = models.DateTimeField(blank=True, null=True)
 
     @property
     def user_email(self):

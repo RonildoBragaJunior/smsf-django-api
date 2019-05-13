@@ -1,9 +1,11 @@
+from smsf.mailgun import send_account_activation
 from rest_framework import status
 from django_filters import rest_framework as filters
 from rest_framework import filters
 from rest_framework import views, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.contrib.auth.models import User
 
 from smsf.models import Documents, StaffMember, SMSFMember
 from smsf.serializers import DocumentsSerializer, StaffMemberSerializer, SMSFMemberSerializer
@@ -12,9 +14,15 @@ class SignUpViewSet(views.APIView):
 
     def post(self, request):
         serializer = SMSFMemberSerializer(data=request.data)
+
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                User.objects.get(username=request.data['username'])
+                return Response('This email {0} has been taken'.format(request.data['username']), status=status.HTTP_403_FORBIDDEN)
+            except User.DoesNotExist:
+                instance = serializer.save()
+                send_account_activation(instance.user.email)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({serializer.error_messages}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -27,7 +35,6 @@ class SignUpViewSet(views.APIView):
             return Response(serializer.data)
         else:
             return Response({serializer.error_messages})
-
 
 class StaffMemberViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
