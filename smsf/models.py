@@ -9,7 +9,16 @@ GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'),)
 YES_NO_CHOICES = (('Y', 'Yes'), ('N', 'No'),)
 ROLLOVER_CHOICES = (('F', 'Full'), ('P', 'Partial'),)
 STAFF_ROLE = (('S', 'Sale'), ('O', 'Operations'),('A','Accounting'))
-# PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$',message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+PHONE_REGEX = RegexValidator(regex=r'^\+?1?\d{9,15}$',message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+SMSF_MEMBER_LEAD_STATUS = (
+    ('1', 'New lead'),
+    ('2', 'Contact attempted'),
+    ('3', 'In progress'),
+    ('4', 'Converted'),
+    ('5', 'Abandoned')
+)
+
+
 
 
 class Documents(models.Model):
@@ -109,6 +118,7 @@ class SMSFMember(Member):
     tax_file_number = models.CharField(max_length=40, blank=True, null=True)
     occupation = models.CharField(max_length=100, blank=True, null=True)
     employer = models.CharField(max_length=20, blank=True, null=True)
+    lead_status = models.CharField(max_length=1, choices=SMSF_MEMBER_LEAD_STATUS, default='1')
     accept_terms = models.CharField(max_length=1, choices=YES_NO_CHOICES, blank=True, null=True)
     accept_terms_timestamp = models.DateTimeField(blank=True, null=True)
 

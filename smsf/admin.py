@@ -1,7 +1,10 @@
 from django.contrib import admin
 
+from django.contrib.auth.models import User
 from smsf.models import Documents, SMSFund, SMSFMember, SFund, InvestmentStrategy, Address, StaffMember
 
+class UserAdmin(admin.ModelAdmin):
+    search_fields = ['email', 'first_name', 'last_name']
 
 class SMSFMemberAdmin(admin.ModelAdmin):
     search_fields = ['mobile_number', 'tax_file_number']
@@ -11,7 +14,8 @@ class SMSFMemberAdmin(admin.ModelAdmin):
 class SMSFundAdmin(admin.ModelAdmin):
     search_fields = ['name', 'balance']
 
-
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 admin.site.register(SMSFMember, SMSFMemberAdmin)
 admin.site.register(SMSFund, SMSFundAdmin)
 admin.site.register(Documents)
