@@ -6,12 +6,12 @@ from rest_framework import views, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 from smsf.models import Documents, StaffMember, SMSFMember
-from smsf.serializers import DocumentsSerializer, StaffMemberSerializer, SMSFMemberSerializer
+from smsf.serializers import DocumentsSerializer, StaffMemberSerializer, SMSFMemberSerializer, UserSerializer, TokenSerializer
 
 class SignUpViewSet(views.APIView):
-
     def post(self, request):
         serializer = SMSFMemberSerializer(data=request.data)
 
@@ -36,11 +36,21 @@ class SignUpViewSet(views.APIView):
         else:
             return Response({serializer.error_messages})
 
+
+class TokenViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Token.objects.all()
+    serializer_class = TokenSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 class StaffMemberViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = StaffMember.objects.all()
     serializer_class = StaffMemberSerializer
-
 
 class SMSFMemberViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
@@ -48,7 +58,6 @@ class SMSFMemberViewSet(viewsets.ModelViewSet):
     serializer_class = SMSFMemberSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('tax_file_number', 'occupation', 'employer', 'mothers_maiden_name', )
-
 
 class DocumentsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)

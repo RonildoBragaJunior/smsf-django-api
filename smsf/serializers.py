@@ -2,13 +2,24 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.db import transaction
 from smsf.models import Documents, SMSFund, SFund, InvestmentStrategy, StaffMember, Address, SMSFMember
+from rest_framework.authtoken.models import Token
 import datetime
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
-        exclude = ('password',)
+        exclude = ('password','groups', 'user_permissions', 'is_staff')
 
+class TokenSerializer(serializers.ModelSerializer):
+    user_id = serializers.CharField(source='user.id')
+    username = serializers.CharField(source='user.username')
+    smsf_member_id = serializers.CharField(source='user.smsfmember.id')
+    staff_member_id = serializers.CharField(source='user.staffmember.id')
+
+    class Meta:
+        model = Token
+        fields = ('__all__')
 
 class DocumentsSerializer(serializers.ModelSerializer):
     uuid = serializers.CharField(allow_blank=True, required=False)
@@ -19,18 +30,15 @@ class DocumentsSerializer(serializers.ModelSerializer):
         model = Documents
         fields = ('__all__')
 
-
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ('__all__')
 
-
 class InvestmentStrategySerializer(serializers.ModelSerializer):
     class Meta:
         model = InvestmentStrategy
         fields = ('__all__')
-
 
 class SFundSerializer(serializers.ModelSerializer):
     uuid = serializers.CharField(allow_blank=True, required=False)
@@ -41,7 +49,6 @@ class SFundSerializer(serializers.ModelSerializer):
         model = SFund
         fields = ('uuid', 'name', 'balance')
 
-
 class SMSFundSerializer(serializers.ModelSerializer):
     investment_strategies = InvestmentStrategySerializer(many=True)
     documents = DocumentsSerializer(many=True, required=False)
@@ -49,7 +56,6 @@ class SMSFundSerializer(serializers.ModelSerializer):
     class Meta:
         model = SMSFund
         fields = ('__all__')
-
 
 class StaffMemberSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', allow_blank=True, required=False)
@@ -59,7 +65,6 @@ class StaffMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaffMember
         fields = ('__all__')
-
 
 class SMSFMemberSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', allow_blank=True, required=False)

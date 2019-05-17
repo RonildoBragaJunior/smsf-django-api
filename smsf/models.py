@@ -4,7 +4,6 @@ from django.core.validators import RegexValidator
 from django.db import models
 from rest_framework.authtoken.models import Token
 
-
 GENDER_CHOICES = (('M', 'Male'), ('F', 'Female'),)
 YES_NO_CHOICES = (('Y', 'Yes'), ('N', 'No'),)
 ROLLOVER_CHOICES = (('F', 'Full'), ('P', 'Partial'),)
@@ -17,8 +16,6 @@ SMSF_MEMBER_LEAD_STATUS = (
     ('4', 'Converted'),
     ('5', 'Abandoned')
 )
-
-
 
 
 class Documents(models.Model):
@@ -109,7 +106,7 @@ class StaffMember(Member):
 class SMSFMember(Member):
     smsfund = models.ForeignKey(to='SMSFund', related_name='smsf_members', null=True, blank=True, on_delete=models.CASCADE)
     contact_owner = models.ForeignKey(to='StaffMember', null=True, blank=True, on_delete=models.CASCADE)
-    documents = models.ManyToManyField(to='Documents', related_name='documents', null=True, blank=True)
+    documents = models.ManyToManyField(to='Documents', related_name='documents')
     place_of_residence = models.OneToOneField(to='Address', related_name='smsf_member_place_of_residence', null=True, blank=True, on_delete=models.CASCADE)
     place_of_birth = models.OneToOneField(to='Address', related_name='smsf_member_place_of_birth', null=True, blank=True, on_delete=models.CASCADE)
 

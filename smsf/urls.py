@@ -4,9 +4,11 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 
 from smsf.views import DocumentsViewSet, StaffMemberViewSet, \
-    SMSFMemberViewSet, SignUpViewSet
+    SMSFMemberViewSet, SignUpViewSet, UserViewSet, TokenViewSet
 
 router = routers.DefaultRouter()
+router.register(r'token', TokenViewSet)
+router.register(r'user', UserViewSet)
 router.register(r'staff_member', StaffMemberViewSet)
 router.register(r'smsf_member', SMSFMemberViewSet)
 router.register(r'documents', DocumentsViewSet)
